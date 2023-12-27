@@ -13,6 +13,19 @@ export namespace GoogleSheetMethod {
     UNFORMATTED_VALUE = "UNFORMATTED_VALUE",
     FORMULA = "FORMULA"
   }
+  export enum ValueInputOption {
+    INPUT_VALUE_OPTION_UNSPECIFIED = "INPUT_VALUE_OPTION_UNSPECIFIED",
+    RAW = "RAW",
+    USER_ENTERED = "USER_ENTERED"
+  }
+  export enum InsertDataOption {
+    INSERT_ROWS = "INSERT_ROWS",
+    OVERWRITE = "OVERWRITE"
+  }
+  export enum ResponseDateTimeRenderOption {
+    FORMATTED_STRING = "FORMATTED_STRING",
+    SERIAL_NUMBER = "SERIAL_NUMBER"
+  }
 }
 
 

@@ -1,19 +1,26 @@
-interface GoogleSheetResponse {
-  data: Array<Array<string | number>>
-}
-
 interface TableObject {
   [header: string]: string | number
+}{ }
+
+export interface ConvertToObjectsReturn {
+  tableContent: TableObject[],
+  rowCount: number,
+  columnCount: number
 }
 
-export function convertToObjects(sheetResponse: GoogleSheetResponse): TableObject[] {
-  const [headers, ...rows] = sheetResponse.data;
+export function convertToObjects(sheetResponse: Array<Array<string | number>>): ConvertToObjectsReturn {
+  const [headers, ...rows] = sheetResponse
 
-  return rows.map((row) => {
-    const obj: TableObject = {};
+  const tableObject = rows.map((row) => {
+    const obj: TableObject = {}
     headers.forEach((header, index) => {
-      obj[header as string] = row[index];
-    });
-    return obj;
-  });
+      obj[header as string] = row[index]
+    })
+    return obj
+  })
+  return {
+    rowCount: tableObject.length,
+    columnCount: headers.length,
+    tableContent: tableObject
+  }
 }

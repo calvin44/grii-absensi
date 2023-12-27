@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { googleAuth } from '@/googleSheet/auth'
 import { getRangeFromGoogleSheet, GoogleSheetClient } from '@/googleSheet/getGoogleSheetTableRange'
-import { convertToObjects } from '@/googleSheet/convertTableToObject'
+import { ConvertToObjectsReturn, convertToObjects } from '@/googleSheet/convertTableToObject'
 
 interface ErrorResponse {
   error: string
@@ -9,7 +9,7 @@ interface ErrorResponse {
 }
 
 interface SuccessResponse {
-  data: any
+  tableContent: ConvertToObjectsReturn["tableContent"] | []
 }
 
 type ResponseData = SuccessResponse | ErrorResponse
@@ -22,24 +22,19 @@ export default async function handler(
     if (req.method !== 'GET') {
       return res.status(405).json({ error: 'Method Not Allowed', message: 'Only GET requests are allowed.' })
     }
-
+    const googleSheetSheetName = "Bank data jemaat GRII Taipei"
     const client: GoogleSheetClient = await googleAuth()
-    const googleSheetTable: GoogleSheetTable | null = await getRangeFromGoogleSheet(client, 'Absensi GRII Taipei 2024')
+    const googleSheetTable = await getRangeFromGoogleSheet(client, googleSheetSheetName)
 
-    if (!googleSheetTable) {
-      return res.status(500).json({
-        error: 'Internal Server Error',
-        message: 'GoogleSheet API Error, please check the log',
-      })
-    }
+    if (!googleSheetTable) throw new Error("GoogleSheet table not found")
 
-    const successResponse: SuccessResponse = {
-      data: googleSheetTable.data.values,
-    }
+    // handle no data / empty table
+    const googleSheetTableValues = googleSheetTable.data.values
+    if (!googleSheetTableValues) return res.status(200).json({ tableContent: [] })
 
-    const objectTable = convertToObjects(successResponse)
+    const tableContent: ConvertToObjectsReturn["tableContent"] = convertToObjects(googleSheetTableValues).tableContent
 
-    return res.status(200).json({ data: successResponse })
+    return res.status(200).json({ tableContent: tableContent })
   } catch (err) {
     console.error(err)
     return res.status(500).json({
