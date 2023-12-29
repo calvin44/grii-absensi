@@ -1,14 +1,14 @@
-interface TextInputParameters {
+interface TextInputProps {
   labelText: string
   placeholderText: string
   input: string
   setInput: (text: string) => void
 }
 
-const TextInput: React.FC<TextInputParameters> = ({ labelText, placeholderText, input, setInput }) => {
+const TextInput: React.FC<TextInputProps> = ({ labelText, placeholderText, input, setInput }) => {
   return (
     <div className="mb-4">
-      <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+      <label className="block text-sm font-medium text-gray-700 mb-3">
         {labelText}
       </label>
       <input
