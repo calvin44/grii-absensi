@@ -15,8 +15,6 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({ selectedDate, onCha
     onChange(dateString)
   }
 
-  console.log(selectedDate)
-
   return (
     <div className="relative w-full">
       <DatePicker
