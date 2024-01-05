@@ -46,7 +46,8 @@ export default async function handler(
       return res.status(405).json({ error: 'Method Not Allowed', message: 'Only POST requests are allowed.' })
     }
 
-    const profilJemaat = req.body as AddProfilRequest
+    const profilJemaat = JSON.parse(req.body) as AddProfilRequest
+
     const googleSheetSheetName = "Bank data jemaat GRII Taipei"
     const client: GoogleSheetClient = await googleAuth()
     const googleSheetTable = await getRangeFromGoogleSheet(client, googleSheetSheetName)
